@@ -1,0 +1,6 @@
+# Configuration for: Processing Flow (Project Alpha)
+# File: configs/variables/dept_project_alpha/processing_config_dept_project_alpha.yaml
+# Corresponding Prefect Variable Name (proposed): dept_project_alpha_processing_config
+# department_name: "Project Alpha"
+# subflow_configs:
+#   category_x: {}

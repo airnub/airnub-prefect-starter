@@ -1,0 +1,62 @@
+# File: configs/variables/dept_project_alpha/ingestion_config_dept_project_alpha.yaml
+
+# Optional metadata for the whole stage/department if your flow uses it
+# department_identifier_meta: "dept_project_alpha"
+# stage_meta: "ingestion"
+
+# Configuration for: Ingestion Flow (Project Alpha)
+# File: configs/variables/dept_project_alpha/ingestion_config_dept_project_alpha.yaml
+# Corresponding Prefect Variable Name (proposed): dept_project_alpha_ingestion_config
+# department_name: "Project Alpha"
+# subflow_configs:
+#   category_x: {}
+# File: configs/variables/dept_project_alpha/ingestion_config_dept_project_alpha.yaml
+# This content will become the value of the 'dept_project_alpha_ingestion_config' Prefect Variable.
+
+# Configuration for Public API Data category
+public_api_data:
+  data_source_name: "project_alpha_public_apis_demo"
+  apis_to_poll:
+    - name: "Cat Fact Ninja"
+      url: "https://catfact.ninja/fact"
+      extract_key: "fact"
+    - name: "Bored API Activity"
+      url: "https://www.boredapi.com/api/activity"
+      extract_key: "activity"
+    # Example of an API that might sometimes fail for testing retries
+    # - name: "Sometimes Failing API Placeholder"
+    #   url: "https://httpstat.us/Random/200,500-504" # This URL will randomly succeed or fail
+    #   extract_key: "code" # Assuming it returns JSON like {"code": 200, "description": "OK"}
+
+# Configuration for Scheduled File Downloads category
+scheduled_file_downloads:
+  data_source_name: "project_alpha_demo_files"
+  # Base path inside worker for CAS-like storage.
+  # Should match a path accessible/writable by your worker (e.g., mapped in docker-compose.yml)
+  local_artifacts_storage_base: "/app/local_demo_artifacts/downloaded_files" # Ensure this dir is created or creatable
+  files_to_acquire:
+    - name: "Prefect README Snapshot (Raw)"
+      url: "https://raw.githubusercontent.com/PrefectHQ/prefect/main/README.md"
+      link_title: "Prefect Main README (Raw)" # Example, could be used by core logic
+      source_page_url: "https://github.com/PrefectHQ/prefect" # Example
+    - name: "Sample Text File (Alice in Wonderland)"
+      url: "https://www.gutenberg.org/files/11/11-0.txt"
+      link_title: "Alice's Adventures in Wonderland (Plain Text UTF-8)"
+    # Example of a potentially larger file
+    # - name: "Sample PDF (Prefect Whitepaper - link may change)"
+    #   url: "https://www.prefect.io/wp-content/uploads/2022/07/Prefect-2-Whitepaper.pdf"
+    #   link_title: "Prefect 2 Whitepaper PDF"
+
+# Configuration for Web Page Link Scraping category
+web_page_link_scraping:
+  data_source_name: "project_alpha_web_pages_demo"
+  # Base path inside worker for storing local JSON manifests for scraped pages
+  local_manifests_storage_base: "/app/local_demo_artifacts/scraped_page_manifests" # Ensure this dir is created or creatable
+  pages_to_scrape:
+    - name: "Prefect Blog Main Page"
+      url: "https://www.prefect.io/blog/"
+    - name: "Python Org About Page"
+      url: "https://www.python.org/about/"
+    # Example of a page that might not have a canonical URL explicitly set
+    # - name: "Example.com"
+    #   url: "http://example.com"

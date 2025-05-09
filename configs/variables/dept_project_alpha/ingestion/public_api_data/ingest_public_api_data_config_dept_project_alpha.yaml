@@ -1,0 +1,17 @@
+# Configuration for: Ingest Public API Data (Project Alpha)
+# File: configs/variables/dept_project_alpha/ingestion/public_api_data/ingest_public_api_data_config_dept_project_alpha.yaml
+# Corresponding Prefect Variable Name (proposal - requires setup script update): dept_project_alpha_ingestion_public_api_data_config
+
+# Define parameters needed by the 'ingest_public_api_data_flow_dept_project_alpha.py' flow.
+# This structure will likely be loaded into a Prefect Variable (e.g., 'dept_project_alpha_ingestion_public_api_data_config')
+# or included within a larger department/stage configuration Variable.
+
+# Example Parameters:
+data_source_name: "dept_project_alpha_ingestion_public_api_data" # For manifest tasks
+source_url: "http://example.com/dept_project_alpha/ingestion/public_api_data/data.csv"
+# api_endpoint: null
+# target_table: "processed_public_api_data"
+# scraping_selectors:
+#   - container: ".item-list"
+#     link: "a.data-link[href]"
+# processing_threshold: 0.95

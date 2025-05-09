@@ -1,0 +1,63 @@
+name: airnub-prefect-starter
+prefect-version: 3.4.0
+deployments:
+- name: Ingestion Deployment (Project Alpha)
+  version: null
+  tags:
+  - example
+  - ingestion
+  - dept_project_alpha
+  description: Local Dev deployment for Project Alpha ingestion orchestrator
+  entrypoint: flows/dept_project_alpha/ingestion_flow_dept_project_alpha.py:ingestion_flow_dept_project_alpha
+  parameters: {}
+  schedule: null
+  work_pool:
+    name: default
+    work_queue_name: default
+  infrastructure:
+    type: docker-container
+    block_slug: docker-container/local-worker-infra
+  storage: null
+  pull:
+  - prefect.deployments.steps.set_working_directory:
+      directory: /app
+- name: Processing Deployment (Project Alpha)
+  version: null
+  tags:
+  - example
+  - processing
+  - dept_project_alpha
+  description: Local Dev deployment for Project Alpha processing orchestrator
+  entrypoint: flows/dept_project_alpha/processing_flow_dept_project_alpha.py:processing_flow_dept_project_alpha
+  parameters: {}
+  schedule: null
+  work_pool:
+    name: default
+    work_queue_name: default
+  infrastructure:
+    type: docker-container
+    block_slug: docker-container/local-worker-infra
+  storage: null
+  pull:
+  - prefect.deployments.steps.set_working_directory:
+      directory: /app
+- name: Analysis Deployment (Project Alpha)
+  version: null
+  tags:
+  - example
+  - analysis
+  - dept_project_alpha
+  description: Local Dev deployment for Project Alpha analysis orchestrator
+  entrypoint: flows/dept_project_alpha/analysis_flow_dept_project_alpha.py:analysis_flow_dept_project_alpha
+  parameters: {}
+  schedule: null
+  work_pool:
+    name: default
+    work_queue_name: default
+  infrastructure:
+    type: docker-container
+    block_slug: docker-container/local-worker-infra
+  storage: null
+  pull:
+  - prefect.deployments.steps.set_working_directory:
+      directory: /app

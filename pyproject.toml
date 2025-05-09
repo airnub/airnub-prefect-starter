@@ -1,0 +1,152 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "airnub_prefect_starter"
+version = "0.0.1"
+description = "Base starter template for Prefect projects at Airnub Technologies"
+authors = [
+  { name = "Airnub Technologies Limited" },
+  { name = "Alan Gunning" },
+]
+license = { file = "LICENSE" }
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Framework :: Prefect",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Database",
+    "Topic :: Scientific/Engineering",
+]
+
+# --- Dependencies ---
+dependencies = [
+    # Prefect Core
+    "prefect>=3.4.0,<4.0",
+
+    # Database Stack (SQLAlchemy + Pydantic)
+    "sqlalchemy>=2.0.25,<3.0",
+    "psycopg2-binary>=2.9.9",
+    "pydantic>=2.5.0,<3.0",
+    "pydantic-settings>=2.1.0",
+
+    # DS & ML Stack (TODO: Make some of these optional to the *starter* template)
+    "ipython",
+    "jupyterlab",
+    "loguru",
+    "matplotlib",
+    "mkdocs",
+    "notebook",
+    "numpy",
+    "pandas",
+    "scikit-learn",
+    "tqdm",
+
+    # Core Tooling & Utilities
+    "python-dotenv>=1.0.0",
+    "typer",
+    "requests>=2.28.0",
+    "beautifulsoup4>=4.11.0",
+    "lxml",
+    "httpx",
+]
+
+requires-python = "~=3.12.0"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff",
+    "types-requests",
+    "types-beautifulsoup4",
+    "prefect-docker>=0.4.0",
+]
+
+data_science = [
+    "ipython",
+    "jupyterlab",
+    "loguru",
+    "matplotlib",
+    "notebook",
+    "numpy",
+    "pandas",
+    "scikit-learn",
+    "tqdm",
+]
+
+docs_build = [
+    "mkdocs",
+    "mkdocs-material", # If using material theme
+]
+
+[project.urls]
+Homepage = "https://github.com/airnub/airnub-prefect-starter"
+Repository = "https://github.com/airnub/airnub-prefect-starter"
+# Bug Tracker = "https://github.com/airnub/airnub-prefect-starter/issues"
+
+# --- Tool Configurations ---
+
+[tool.flit.module]
+# Define the main Python module flit should package
+name = "airnub_prefect_starter"
+
+[tool.ruff]
+# Configuration for Ruff (Linter/Formatter/Import Sorter)
+line-length = 99
+# Define source directories for Ruff to check
+src = ["airnub_prefect_starter", "flows", "tests", "scripts"] # Added scripts, removed config
+include = ["pyproject.toml", "**/*.py", "**/*.pyi"]
+exclude = [
+    ".git",
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist",
+    ".pytest_cache",
+    ".mypy_cache",
+    "docs/site",
+    "data/",
+    "notebooks/",
+    "*.ipynb",
+    "configs/", # Config YAMLs are not Python
+]
+
+[tool.ruff.lint]
+extend-select = [
+    "I",  # isort import sorting rules
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes errors
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+    "PT", # flake8-pytest-style
+]
+ignore = [
+    "E501",
+]
+
+[tool.ruff.lint.isort]
+# Define known first-party modules (your project's code)
+known-first-party = ["airnub_prefect_starter"]
+force-sort-within-sections = true
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.pytest.ini_options]
+# Configuration for Pytest
+minversion = "7.0"
+addopts = "-ra -q --cov=airnub_prefect_starter --cov-report=term-missing"
+testpaths = [
+    "tests",
+]
+pythonpath = "."

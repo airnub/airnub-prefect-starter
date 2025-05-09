@@ -1,0 +1,17 @@
+# Configuration for: Ingest Scheduled File Downloads (Project Alpha)
+# File: configs/variables/dept_project_alpha/ingestion/scheduled_file_downloads/ingest_scheduled_file_downloads_config_dept_project_alpha.yaml
+# Corresponding Prefect Variable Name (proposal - requires setup script update): dept_project_alpha_ingestion_scheduled_file_downloads_config
+
+# Define parameters needed by the 'ingest_scheduled_file_downloads_flow_dept_project_alpha.py' flow.
+# This structure will likely be loaded into a Prefect Variable (e.g., 'dept_project_alpha_ingestion_scheduled_file_downloads_config')
+# or included within a larger department/stage configuration Variable.
+
+# Example Parameters:
+data_source_name: "dept_project_alpha_ingestion_scheduled_file_downloads" # For manifest tasks
+source_url: "http://example.com/dept_project_alpha/ingestion/scheduled_file_downloads/data.csv"
+# api_endpoint: null
+# target_table: "processed_scheduled_file_downloads"
+# scraping_selectors:
+#   - container: ".item-list"
+#     link: "a.data-link[href]"
+# processing_threshold: 0.95

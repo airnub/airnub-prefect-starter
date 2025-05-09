@@ -1,0 +1,106 @@
+# Project information
+site_name: Airnub Prefect Starter
+site_url: https://airnub.github.io/airnub-prefect-starter/
+site_author: Airnub Technologies Limited
+site_description: >-
+  Documentation for the Airnub Prefect Starter template project, a foundation
+  for building robust data pipelines with Prefect 3.
+
+# Repository
+repo_url: https://github.com/airnub/airnub-prefect-starter
+repo_name: airnub/airnub-prefect-starter
+
+# Copyright
+copyright: Copyright &copy; 2025 Airnub Technologies Limited
+
+# Configuration
+theme:
+  name: material # Using the Material for MkDocs theme
+  palette: # Optional: Example of customizing colors
+    # For light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo # Or your preferred primary color
+      accent: blue    # Or your preferred accent color
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    # For dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: light-blue
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand # Auto-expands navigation sections containing the current page
+    - toc.integrate
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotate # Allows for annotations in code blocks
+    - content.code.copy    # Adds a copy button to code blocks
+  language: en
+  logo: assets/logo.png # Optional: Add a logo to docs/docs/assets/logo.png (e.g., 128x128)
+  favicon: assets/favicon.png # Optional: Add a favicon to docs/docs/assets/favicon.png
+
+# Plugins
+plugins:
+  - search # Built-in search
+  # Consider adding ' सामाजिक-cards' for better social media sharing previews once deployed
+  # - social
+  # - mkdocstrings: # If you plan to generate API docs from Python docstrings
+  #     handlers:
+  #       python:
+  #         options:
+  #           show_root_heading: true
+
+# Customization
+extra:
+  social: # Optional: Add social links
+    - icon: fontawesome/brands/github 
+      link: https://github.com/airnub # TODO: Update with your org GitHub link
+    # - icon: fontawesome/brands/twitter
+    #   link: https://twitter.com/your_handle
+
+# Page tree - This structure is good and logical for your template.
+nav:
+  - 'Overview': 'index.md'
+  - 'Getting Started': 'getting-started.md'
+  - 'Core Concepts & Architecture': 'architecture.md' # Consistent naming
+  - 'Configuration': 'configuration.md'
+  - 'Data Science Workflow': 'data_science_workflow.md'  # New Page
+  - 'Usage Guide': 'usage.md'
+  - 'Development Guide': 'development.md'
+  - 'Deployment Principles': 'deployment.md' # Renamed from Deployment Guide
+  - 'Examples': # New Section for Project Alpha
+    - 'Project Alpha - Overview': 'examples/project-alpha-overview.md'
+    - 'File Downloads Demo': 'examples/project-alpha-file-downloads.md'
+    - 'API Polling Demo': 'examples/project-alpha-api-polling.md'
+    - 'Web Scraping Demo': 'examples/project-alpha-web-scraping.md'
+  - 'Changelog': 'changelog.md' # New Page
+  - 'License': 'license.md'
+  # - 'Troubleshooting': 'troubleshooting.md' # Can add later
+
+# Extensions - Your current list is good for modern Markdown features.
+markdown_extensions:
+  - admonition # For call-outs like notes, warnings, tips
+  - pymdownx.details # For collapsible sections
+  - pymdownx.superfences # For nested code blocks and more
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span # For line highlighting
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - attr_list # For adding attributes to markdown elements
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - toc:
+      permalink: true # Adds permalinks to headings

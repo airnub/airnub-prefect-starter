@@ -1,0 +1,9 @@
+# Configuration for task: Fetch HTML Content of Web Page
+# File: configs/variables/dept_project_alpha/ingestion/web_page_link_scraping/tasks/fetch_html_content_of_web_page_task_config_dept_project_alpha.yaml
+# Intended scope: 'web_page_link_scraping' category (ingestion stage)
+# Corresponding Prefect Variable Name (proposal - requires setup script update): dept_project_alpha_ingestion_web_page_link_scraping_fetch_html_content_of_web_page_task_config
+
+# Define parameters that might configure the 'fetch_html_content_of_web_page_task' task.
+# Example Parameters:
+# api_endpoint: "https://api.example.com/endpoint"
+# processing_threshold: 0.8

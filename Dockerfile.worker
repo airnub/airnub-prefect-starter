@@ -1,0 +1,63 @@
+# Dockerfile
+# Builds the custom worker image for the Prefect + DS Starter Template using uv
+
+# Use an official Prefect base image matching your Python version
+FROM prefecthq/prefect:3-python3.12
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PREFECT_HOME=/opt/prefect \
+    PATH="/opt/prefect/.local/bin:${PATH}"
+
+# Set working directory inside the container
+WORKDIR /app
+
+# --- Install OS-level dependencies if needed ---
+# Uncomment and adjust based on your base image and dependencies.
+# Required by psycopg2-binary on many Debian/Ubuntu based images.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq-dev \
+    gcc \
+ && rm -rf /var/lib/apt/lists/*
+
+#TODO: Remove this from here to take advantage of layer cache
+# COPY . .
+# --- Install uv ---
+# Ensure pip is available and upgrade it, then install uv
+RUN python -m pip install --upgrade pip --no-cache-dir \
+ && pip install --no-cache-dir uv
+
+# --- Install Python Dependencies using uv ---
+# Copy only pyproject.toml first to leverage Docker cache
+COPY pyproject.toml ./
+COPY README.md ./
+COPY LICENSE ./
+COPY airnub_prefect_starter /app/airnub_prefect_starter
+
+# Use uv to install dependencies defined in pyproject.toml
+# Includes dependencies from [project.dependencies] and [project.optional-dependencies.dev]
+# Use --system to install into the main site-packages, common in Docker.
+# Use .[dev] to install the current project editable + dev dependencies
+RUN uv pip install --system --no-cache --upgrade ".[dev]"
+
+# --- Copy Application Code ---
+# Copy the main source package directory (which now includes tasks and common)
+# COPY airnub_prefect_starter /app/airnub_prefect_starter
+
+# Copy other top-level directories needed at runtime
+COPY . .
+COPY flows /app/flows
+COPY flows /app/config
+# COPY any other necessary files like prefect.yaml IF needed by runtime logic
+# COPY prefect.yaml /app/prefect.yaml
+
+# --- Prefect Configuration / Permissions (Optional but Recommended) ---
+# Ensure Prefect home exists and set permissions (run as root before switching user)
+# USER root
+# RUN mkdir -p $PREFECT_HOME && chown -R nobody:nogroup $PREFECT_HOME /app
+# USER nobody # Switch to non-root user for security
+
+# --- Set Default Command ---
+# Start a Prefect worker polling the 'default' work pool.
+# Match the pool name in your docker-compose.yml or Prefect Cloud/Server Agent config.
+CMD ["prefect", "worker", "start", "--pool", "default"]

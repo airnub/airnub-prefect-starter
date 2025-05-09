@@ -1,0 +1,128 @@
+# Local Prefect Development Environment: Server, UI, PostgreSQL Database, Custom Worker.
+
+# Top-level networks definition
+networks:
+  prefect-network:
+    driver: bridge # Use standard Docker bridge network
+
+# Top-level volumes definition
+volumes:
+  prefect-db-data: # Persists Prefect server's PostgreSQL data
+
+# Service definitions
+services:
+
+  ####################
+  # PostgreSQL Database
+  # Stores Prefect server metadata (flow runs, deployments, blocks, etc.)
+  ####################
+  database:
+    image: postgres:15
+    container_name: prefect-database
+    restart: unless-stopped
+    environment:
+      # Credentials for the Prefect database
+      POSTGRES_USER: prefect
+      POSTGRES_PASSWORD: prefect_password # Suitable for local dev only
+      POSTGRES_DB: prefect_server
+    volumes:
+      # Mount named volume for data persistence
+      - prefect-db-data:/var/lib/postgresql/data
+    ports:
+      # Map host port 5432 to container port 5432 for external tools (e.g., pgAdmin)
+      - "5432:5432"    
+    networks:
+      - prefect-network
+    healthcheck:
+    # Check if the database is ready to accept connections
+      test: ["CMD-SHELL", "pg_isready -U prefect -d prefect_server"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ####################
+  # Prefect Server & UI
+  # Runs the Prefect API and hosts the web dashboard.
+  ####################
+  server:
+    image: prefecthq/prefect:3-python3.12
+    container_name: prefect-server-ui
+    restart: unless-stopped
+    command: "prefect server start"
+    environment:
+      # --- Database Configuration ---
+      # Connection URL for the server's backend database (Postgres in this case).
+      PREFECT_API_DATABASE_CONNECTION_URL: "postgresql+asyncpg://prefect:prefect_password@database:5432/prefect_server"
+      # Automatically run DB migrations on server startup (default: True)
+      PREFECT_API_DATABASE_MIGRATE_ON_START: "True"
+
+      # --- Server Network Configuration ---
+      # Host/IP the server process listens on *inside* the container.
+      # '0.0.0.0' is crucial for accessibility from other containers and host mapping.
+      PREFECT_SERVER_API_HOST: "0.0.0.0"
+      # Port the server process listens on *inside* the container (default: 4200)
+      # PREFECT_SERVER_API_PORT: 4200 # (Usually not needed, defaults correctly)
+
+      # --- Client Connection Configuration ---
+      # Full URL the browser UI uses to contact the API (via host mapping)
+      PREFECT_UI_API_URL: "http://127.0.0.1:4200/api"
+      # Full URL internal clients *could* use (sets default listening host/port if not overridden)
+      PREFECT_API_URL: "http://0.0.0.0:4200/api"
+
+      # --- Logging ---
+      # Set log level for the server. Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
+      PREFECT_LOGGING_SERVER_LEVEL: "INFO"
+
+      # --- Authentication ---
+      # Optional: Add PREFECT_API_KEY if connecting to an authenticated Prefect Cloud/Server
+      # PREFECT_API_KEY: "your_api_key"      
+    ports:
+      # Map host port 4200 to container port 4200 for accessing the UI/API from host
+      - "4200:4200"
+    depends_on:
+      # Wait for the database to be healthy before starting the server
+      database:
+        condition: service_healthy # Wait for DB to be ready
+    networks:
+      - prefect-network
+
+  ####################
+  # Custom Prefect Worker
+  # Builds from local Dockerfile, runs flows.
+  ####################
+  worker:
+    build:
+      context: . # Use current directory as build context
+      dockerfile: Dockerfile.worker
+    container_name: prefect-custom-worker
+    restart: unless-stopped
+    # Default command is set in the Dockerfile CMD instruction
+    # (Usually: prefect worker start --pool default)
+    volumes:
+      # Mount local data directory for local storage fallback/persistence
+      - ./data:/app/data
+      # Mount .env file (if used by application code, read-only recommended)
+      # Ensure .env is in .gitignore!
+      - ./.env:/app/.env:ro
+    environment:
+      # --- Connection to Server ---
+      # URL the worker uses to connect to the Server API over the internal network
+      # MUST use the service name ('server') as the hostname.
+      PREFECT_API_URL: "http://server:4200/api"
+      # Optional: Add PREFECT_API_KEY if server requires authentication
+      # PREFECT_API_KEY: "your_api_key"
+
+      # --- General Settings ---
+      PYTHONUNBUFFERED: "1" # Recommended for Docker logs
+      # Set log level for the worker/flows. Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
+      PREFECT_LOGGING_LEVEL: "INFO"
+
+      # --- Application Specific Env Vars (Examples) ---
+      # Example: Allow application code in worker to use DATABASE_URL if set in host .env
+      # DATABASE_URL: ${DATABASE_URL:-sqlite:////app/data/local_manifest.db}
+    depends_on:
+      # Wait for the server container to start (doesn't guarantee API is ready)
+      - server
+    networks:
+      - prefect-network
+      
