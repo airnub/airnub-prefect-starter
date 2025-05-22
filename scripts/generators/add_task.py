@@ -25,6 +25,7 @@ import sys
 import re
 from pathlib import Path
 from typing import Dict, Any, List, Optional
+from .utils import sanitize_identifier
 
 # --- Configuration ---
 # Determine project root (assuming this script is in project_root/scripts/generators/)
@@ -42,19 +43,6 @@ STAGES = ["ingestion", "processing", "analysis"] # Standard stages
 PACKAGE_NAME = "airnub_prefect_starter"
 
 # --- Helper Functions (Adapted from other generator scripts) ---
-
-def sanitize_identifier(name: str, suffix: str = "_task") -> str:
-    """Converts a string to a safe snake_case identifier, optionally adding a suffix."""
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-    s2 = re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
-    s3 = re.sub(r'[\s\-/\\&]+', '_', s2) # Include common separators
-    s3 = re.sub(r'\W+', '', s3) # Remove non-alphanumeric chars AFTER replacing separators
-    s4 = re.sub(r'_+', '_', s3).strip('_') # Collapse multiple underscores
-    base_name = s4 if s4 else "default"
-    # Add suffix only if provided and not already present
-    if suffix and not base_name.endswith(suffix):
-         base_name += suffix
-    return base_name
 
 def prompt_user(prompt_text: str, default: str = "") -> str:
     """Prompts the user for input with an optional default."""
@@ -391,7 +379,6 @@ def main():
         task_name_desc, task_func_name, config_filepath, dept_identifier, stage, category_identifier
     )
     create_file(config_filepath, config_content)
-    create_file(target_task_config_dir / "__init__.py", "") # Ensure config tasks subdir exists
 
     # 7. Update __init__.py (Manual Step Reminder)
     print("-" * 60)

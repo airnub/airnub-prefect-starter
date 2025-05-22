@@ -17,6 +17,7 @@ import re
 import yaml # Import YAML library
 from pathlib import Path
 from typing import List, Optional, Dict
+from .utils import sanitize_identifier
 
 # --- Configuration ---
 # Determine project root (assuming this script is in project_root/scripts/generators/)
@@ -34,15 +35,6 @@ DEPT_MAPPING_FILE = PROJECT_ROOT / "configs" / "department_mapping.yaml"
 # STAGES = ["ingestion", "processing", "analysis"] # No longer hardcoded list
 
 # --- Helper Functions ---
-
-def sanitize_identifier(name: str) -> str:
-    """Converts a string to a safe snake_case identifier."""
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-    s2 = re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
-    s3 = re.sub(r'[\s\-/\\&]+', '_', s2)
-    s3 = re.sub(r'\W+', '', s3)
-    s4 = re.sub(r'_+', '_', s3).strip('_')
-    return s4 if s4 else "default_category"
 
 def prompt_user(prompt_text: str, default: str = "") -> str:
     """Prompts the user for input with an optional default."""
