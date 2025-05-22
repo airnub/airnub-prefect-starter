@@ -33,6 +33,10 @@ This template is intended for engineers and data scientists who need to build re
 * **Project Repository:** Visit the [project repository on GitHub](https://github.com/your-org/airnub-prefect-starter) (TODO: Update link) for the source code and to raise issues.
 * **Prefect Community:** For general Prefect questions, check the [Prefect Documentation](https://docs.prefect.io/) or join the [Prefect Community Slack](https://prefect.io/slack).
 
+## Contributing to the Documentation
+
+If you're interested in improving or building this documentation locally, please see our [Documentation Building Guide](BUILDING_DOCS.md).
+
 ## Ready to start?
 
 Proceed to the **[Getting Started](getting-started.md)** guide!

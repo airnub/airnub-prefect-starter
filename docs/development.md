@@ -88,7 +88,7 @@ Prefect tasks in this template are typically thin wrappers around more detailed 
     * Before creating the Prefect task wrapper, write the underlying Python function(s) that perform the actual work.
     * Place this logic in a suitable module within `airnub_prefect_starter/core/` (e.g., `file_handlers.py`, `api_handlers.py`, or a new `your_logic_module.py`).
     * If the logic is extremely generic and small, `airnub_prefect_starter/common/utils.py` might be appropriate.
-    * Ensure this core logic is testable independently of Prefect.
+    *   Ensure this core logic is testable independently of Prefect. This separation is key for maintainability and reusability (see [Core Concepts & Architecture](architecture.md#key-components) for more details).
 2.  **Run the Generator Script:**
     ```bash
     python scripts/generators/add_task.py

@@ -61,7 +61,7 @@ The example flows for "Project Alpha" are designed to demonstrate common pattern
 * **Local Demo Storage (within Docker Worker):**
     * The `scheduled_file_downloads` category demo downloads files and stores them in a CAS-like (Content-Addressable Storage) structure within the worker container, typically under a path like `/app/local_demo_artifacts/project_alpha_scheduled_files/<file_hash>/<original_filename>`.
     * The `public_api_data` and `web_page_link_scraping` categories might also save their fetched/processed data as local files for demo purposes.
-    * **Accessing these files:** If you've mapped a local host directory to `/app/data/` (or similar, like `/app/local_demo_artifacts/`) in your `docker-compose.yml` for the worker service (e.g., `./data/project_alpha_demo_outputs:/app/local_demo_artifacts`), you can browse these files directly on your host machine. Otherwise, you can use `docker exec` or `docker cp`.
+    * **Accessing these files:** If you've mapped a local host directory (e.g., `./data/project_alpha_demo_outputs` as suggested in `architecture.md`) to the worker's `/app/local_demo_artifacts/` directory in your `docker-compose.yml` for the worker service, you can browse these files directly on your host machine. Otherwise, you can use `docker exec` or `docker cp`.
 * **Local JSON Manifest Files (Demo):**
     * Alongside downloaded files (e.g., in the `scheduled_file_downloads` demo), a corresponding `.manifest.json` file is created. This file contains metadata about the downloaded item (source URL, hash, timestamp, headers, local storage path, etc.), structured using Pydantic models defined in `airnub_prefect_starter/core/manifest_models.py`.
     * The `web_page_link_scraping` demo also creates a JSON manifest for the scraped page metadata.
@@ -119,7 +119,7 @@ This template also includes a structure for data science exploration and prototy
     # or if they are set up as entry points in pyproject.toml:
     # process-data 
     ```
-    These scripts typically use path configurations defined in `airnub_prefect_starter/data_science/config_ds.py` to read from and write to directories like `data/raw/`, `data/processed/`, `models/`, etc.
+    These scripts are run in your local development environment (using your activated virtual environment), independently of the Prefect worker. They typically use path configurations defined in `airnub_prefect_starter/data_science/config_ds.py` to read from and write to directories like `data/raw/`, `data/processed/`, `models/`, etc.
 
 * **Jupyter Notebooks:** The `notebooks/` directory is provided for exploratory data analysis using Jupyter Lab or Jupyter Notebook. Ensure your `dev` dependencies (which include `jupyterlab` and `notebook`) are installed (`make install` or `uv pip install -e ".[dev]"`).
     ```bash

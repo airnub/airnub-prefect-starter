@@ -22,8 +22,8 @@ The relevant files for this example include:
     * `flows/dept_project_alpha/ingestion/web_page_link_scraping/ingest_web_page_link_scraping_flow_dept_project_alpha.py`
 * **Task Wrappers (Department-Specific):**
     * `flows/dept_project_alpha/ingestion/web_page_link_scraping/tasks/fetch_html_content_of_web_page_task_dept_project_alpha.py`
-    * `flows/dept_project_alpha/ingestion/web_page_link_scraping/tasks/extract_links_from_html_task_dept_project_alpha.py`
-    * (A new task wrapper, e.g.) `create_scraped_page_manifest_and_artifact_task_dept_project_alpha.py`
+    * `flows/dept_project_alpha/ingestion/web_page_link_scraping/tasks/extract_links_from_html_content_task_dept_project_alpha.py`
+    * `flows/dept_project_alpha/ingestion/web_page_link_scraping/tasks/create_scrape_artifact_task_dept_project_alpha.py`
 * **Category Configuration (YAML for Prefect Variable):**
     * `configs/variables/dept_project_alpha/ingestion/web_page_link_scraping/ingest_web_page_link_scraping_config_dept_project_alpha.yaml`
 * **Core Logic (in `airnub_prefect_starter` package):**
@@ -65,16 +65,13 @@ The `ingest_web_page_link_scraping_flow_dept_project_alpha.py` (the category flo
 
 2.  **Iterate and Process Web Pages:**
     The flow loops through each page definition in the `pages_to_scrape` list. For each page `url`:
-    * **Fetch HTML:** It calls the department-specific task wrapper **`Workspace_html_content_of_web_page_task_dept_project_alpha`**.
+    * **Fetch HTML:** It calls the department-specific task wrapper **`fetch_html_content_of_web_page_task_dept_project_alpha`**.
         * This task wrapper, located in `flows/dept_project_alpha/ingestion/web_page_link_scraping/tasks/`, calls the core logic function `core_fetch_html_content` (from `airnub_prefect_starter/core/web_utils.py`) to retrieve the raw HTML content of the page.
-    * **Extract Links & Canonical URL:** If HTML content is successfully fetched, it calls the department-specific task wrapper **`extract_links_from_html_task_dept_project_alpha`**.
+    * **Extract Links & Canonical URL:** If HTML content is successfully fetched, it calls the department-specific task wrapper **`extract_links_from_html_content_task_dept_project_alpha`**.
         * This task wrapper calls the core logic function `core_parse_links_and_canonical_from_html` (also from `airnub_prefect_starter/core/web_utils.py`).
         * This core function parses the HTML (using `BeautifulSoup`), identifies the canonical URL (if present), hashes the canonical URL string (using `generate_sha256_hash_from_string` from `common/utils.py`), and extracts all valid HTTP/HTTPS links from `<a>` tags.
         * It returns a dictionary (`scrape_result`) containing the original URL, the found canonical URL, the hash of the canonical URL, and the list of extracted links.
-    * **Create Local Manifest and Prefect UI Artifact:** The flow then typically calls another department-specific task (e.g., `create_scraped_page_manifest_and_artifact_task_dept_project_alpha`).
-        * This task wrapper would orchestrate calls to:
-            1.  `save_scraped_page_manifest_locally` (from `airnub_prefect_starter/core/artifact_creators.py` or `web_utils.py`): This function takes the `scrape_result` dictionary, populates a `DemoScrapedPageManifestEntry` Pydantic model (from `core/manifest_models.py`), serializes it to JSON, and saves it to a local file within the worker. The storage path for this JSON manifest is structured using the `data_source_name` and the `canonical_url_hash` (e.g., `<local_manifests_storage_base>/<data_source_name>/scraped_pages_manifests/<canonical_url_hash>/<original_url_slugified>.manifest.json`).
-            2.  `core_create_scraped_page_artifact` (from `airnub_prefect_starter/core/artifact_creators.py`): This function uses the `scrape_result` dictionary and the path to the saved local JSON manifest to generate a Prefect Markdown artifact in the UI.
+    * **Create Local Manifest and Prefect UI Artifact:** The flow then calls the department-specific task **`create_scrape_artifact_task_dept_project_alpha`**. This task wrapper orchestrates calls to `save_scraped_page_manifest_locally` (to save the JSON manifest) and `core_create_scraped_page_artifact` (to generate the Prefect Markdown artifact), both of which are functions from `airnub_prefect_starter/core/artifact_creators.py`.
 
 3.  **Core Logic Functions (highlights):**
     * **`airnub_prefect_starter/core/web_utils.py`:**

@@ -19,16 +19,15 @@ The relevant files for this example include:
 * **Category Flow:**
     * `flows/dept_project_alpha/ingestion/public_api_data/ingest_public_api_data_flow_dept_project_alpha.py`
 * **Task Wrappers (Department-Specific):**
-    * `flows/dept_project_alpha/ingestion/public_api_data/tasks/fetch_public_api_data_task_dept_project_alpha.py`
+    * `flows/dept_project_alpha/ingestion/public_api_data/tasks/fetch_data_from_public_api_task_dept_project_alpha.py`
     * `flows/dept_project_alpha/ingestion/public_api_data/tasks/parse_api_response_task_dept_project_alpha.py`
-    * (Potentially) A new task wrapper like `create_api_polling_artifact_task_dept_project_alpha.py`
+    * `flows/dept_project_alpha/ingestion/public_api_data/tasks/create_api_data_artifact_task_dept_project_alpha.py`
 * **Category Configuration (YAML for Prefect Variable):**
     * `configs/variables/dept_project_alpha/ingestion/public_api_data/ingest_public_api_data_config_dept_project_alpha.yaml`
 * **Task Configurations (Optional YAMLs for Prefect Variables):**
-    * `configs/variables/dept_project_alpha/ingestion/public_api_data/tasks/` (e.g., `Workspace_public_api_data_task_config_dept_project_alpha.yaml`)
+    * `configs/variables/dept_project_alpha/ingestion/public_api_data/tasks/` (e.g., `fetch_data_from_public_api_task_config_dept_project_alpha.yaml`)
 * **Core Logic (in `airnub_prefect_starter` package):**
     * `airnub_prefect_starter/core/api_handlers.py` (containing `core_fetch_json_from_api` and `core_parse_api_response_for_demo`)
-    * `airnub_prefect_starter/core/artifact_creators.py` (would contain a function like `core_create_api_data_artifact` if you create one for this purpose)
 
 ## Configuration Example
 
@@ -70,13 +69,12 @@ The `ingest_public_api_data_flow_dept_project_alpha.py` (the category flow for "
 
 2.  **Iterate and Process APIs:**
     The flow loops through each API definition in the `apis_to_poll` list. For each API:
-    * It calls the department-specific task wrapper **`Workspace_public_api_data_task_dept_project_alpha`**. This task is located in `flows/dept_project_alpha/ingestion/public_api_data/tasks/`.
+    * It calls the department-specific task wrapper **`fetch_data_from_public_api_task_dept_project_alpha`**. This task is located in `flows/dept_project_alpha/ingestion/public_api_data/tasks/`.
         * This task wrapper, in turn, calls the core logic function `core_fetch_json_from_api` (from `airnub_prefect_starter/core/api_handlers.py`) using the API's `url` and any specified `params`.
     * If data is successfully fetched (i.e., a JSON response dictionary is returned):
         * It calls the department-specific task wrapper **`parse_api_response_task_dept_project_alpha`**.
         * This task wrapper calls the core logic function `core_parse_api_response_for_demo` (also from `airnub_prefect_starter/core/api_handlers.py`) with the fetched JSON data and the configured `extract_key`. This function returns a dictionary with the extracted information.
-    * **Create Prefect UI Artifact:** The flow then (typically) calls another department-specific task (e.g., a new `create_api_data_artifact_task_dept_project_alpha` if you created one).
-        * This task wrapper would use a function from `airnub_prefect_starter/core/artifact_creators.py` (e.g., a new function like `core_create_api_polling_artifact`) to generate a Prefect Markdown artifact. This artifact summarizes the API polled and displays the key information extracted by the parsing task.
+    * **Create Prefect UI Artifact:** The flow then calls the department-specific task **`create_api_data_artifact_task_dept_project_alpha`**. This task is responsible for generating a Prefect Markdown artifact summarizing the API polled and the key information extracted.
 
 3.  **Core Logic Functions (located in `airnub_prefect_starter/core/api_handlers.py`):**
     * `core_fetch_json_from_api`:

@@ -5,6 +5,7 @@ site_author: Airnub Technologies Limited
 site_description: >-
   Documentation for the Airnub Prefect Starter template project, a foundation
   for building robust data pipelines with Prefect 3.
+docs_dir: .
 
 # Repository
 repo_url: https://github.com/airnub/airnub-prefect-starter
@@ -45,8 +46,6 @@ theme:
     - content.code.annotate # Allows for annotations in code blocks
     - content.code.copy    # Adds a copy button to code blocks
   language: en
-  logo: assets/logo.png # Optional: Add a logo to docs/docs/assets/logo.png (e.g., 128x128)
-  favicon: assets/favicon.png # Optional: Add a favicon to docs/docs/assets/favicon.png
 
 # Plugins
 plugins:

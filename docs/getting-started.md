@@ -56,7 +56,7 @@ Before you begin, ensure you have the following installed:
     # export PREFECT_API_URL="YOUR_PREFECT_CLOUD_API_URL"
     # export PREFECT_API_KEY="YOUR_PREFECT_CLOUD_API_KEY" # Required for Cloud
     ```
-    **Tip:** For persistent local configuration, consider adding this `export` line to your shell's profile (`.zshrc`, `.bashrc`, `.bash_profile`) or use a `.env` file at the project root (see `README.md` for notes on `.env` usage with Docker Compose and scripts).
+    **Tip:** For persistent local configuration, consider adding this `export` line to your shell's profile (`.zshrc`, `.bashrc`, `.bash_profile`) or use a `.env` file at the project root (see the main project `README.md` in the repository root for notes on `.env` usage with Docker Compose and scripts).
 
 5.  **Start Local Development Services:**
     This uses Docker Compose to start the Prefect Server, UI, PostgreSQL database, and the custom Prefect Worker based on the project's `Dockerfile.worker`.
@@ -76,7 +76,7 @@ Before you begin, ensure you have the following installed:
     make setup-blocks
     ```
     If you wish to extend this template to use specific cloud services (e.g., for remote file storage), you would typically:
-    1. Add the required optional dependencies (e.g., `uv pip install -e ".[aws]"` for AWS S3).
+    1. Add the required optional dependencies (e.g., `uv pip install -e ".[aws]"` for AWS S3, typically defined in your `pyproject.toml` file under `project.optional-dependencies`).
     2. Modify `scripts/setup_prefect_blocks.py` or create a new script to define and create blocks for those cloud services (e.g., `S3Bucket`, `GCSBucket`). This would likely involve setting cloud provider-specific environment variables (like `SETUP_CLOUD_ACCESS_KEY`, `SETUP_BUCKET_NAME`) before running your modified script.
     
     Verify any created blocks (e.g., `docker-container/local-worker-infra`) appear in the Prefect UI under the "Blocks" section. See the [Configuration Guide](configuration.md) for more details.

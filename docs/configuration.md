@@ -82,7 +82,7 @@ async def my_flow_using_blocks():
         # Example: Loading a generic JSON block storing non-sensitive API info
         # (Though this type of config is now primarily handled by Prefect Variables from YAMLs)
         # api_info_block = await Block.load("json/project-alpha-public-api-details")
-        # api_key = api_info_block.value.get("api_key_if_it_were_here_but_use_secret_block_instead")
+        # api_key = api_info_block.value.get("example_api_key") # Note: Sensitive keys should always be stored in Secret Blocks.
         
         # More typically, you'd load a Secret block for an API key
         api_key_secret = await Block.load("secret/my-service-api-key")
