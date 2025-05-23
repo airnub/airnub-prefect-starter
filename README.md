@@ -145,7 +145,7 @@ You can also build and view the documentation locally:
 * **`docs/`**: Project documentation source files.
 * **`flows/`**: Prefect flow definitions and their department/category-specific task wrappers, organized by `dept_<id>/<stage_name>/<category_id>/`.
 * **`scripts/`**: Helper scripts for development and operations.
-    * `generators/`: Scripts to scaffold new Prefect workflow components.
+    *   `generators/`: Scripts to scaffold new Prefect workflow components. These scripts enforce specific project conventions for file naming and directory structure. For details, see the [Project Conventions documentation](docs/docs/development.md#project-conventions-and-generators).
 * **`tests/`**: Unit and integration tests.
 * **`.env.example`**: Example environment variables for `docker-compose.yml`. **Copy to `.env` and customize.**
 * **`.env`**: Local environment configuration file used by Docker Compose (should be in `.gitignore`).
